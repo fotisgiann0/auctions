@@ -1,0 +1,23 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Active Listings</h2>
+    {% for listing in listings %}
+        <ul>
+            <li >
+                <h1> <a href="{% url 'listing_page' listing.title %}">{{ listing.title }}</a></h1> 
+                
+                <img src="{{ listing.image }}" alt="{{ listing.description }}">
+                <div>{{ listing.description }}</div>
+                <div>Price:  {{ listing.starting_bid }}</div>
+                {% for commentit in comments %}
+                    {% if commentit.on_item == listing %}
+                        <div> {{ commentit.comment_by }} : {{ commentit.comment }} </div>
+                    {% endif %}
+                {% endfor %}
+            </li>
+        </ul>
+        <hr style="height:2px;border-width:0;color:gray;background-color:lightgray">
+    {% endfor %}
+ 
+{% endblock %}

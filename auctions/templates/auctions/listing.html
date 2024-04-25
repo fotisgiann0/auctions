@@ -1,0 +1,61 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    
+    
+    
+
+    <h1>{{ listing.title }}</h1> 
+    <img src="{{ listing.image }}" alt="{{ listing.description }}">
+    <div>{{ listing.description }}</div>
+    <hr style="height:2px;border-width:0;color:gray;background-color:lightgray">
+    <div>Starting Bid:  {{ listing.starting_bid }}</div>
+    <div>Category: {{ listing.category }}</div>
+    <div>Listed by: {{ listing.listing_by }}</div>
+    {% for commentit in comments %}
+        
+         <div>{{ commentit.comment_by }} wrote: {{ commentit.comment }} </div>
+        
+    {% endfor %}
+    {% for bid in bids %}
+        
+         <div>{{ bid.bid_by }} placed a bit of: {{ bid.price }} </div>
+        
+    {% endfor %}
+    <hr style="height:2px;border-width:0;color:gray;background-color:lightgray">
+    {% if user is not NULL %}
+        {% if watchlist is not None%}
+            <div><a href="{% url 'add_to_list' listing.title%}">Remove from watchlist</a></div>
+        {% else  %}
+            <div ><a href="{% url 'add_to_list' listing.title%}" >Add it to the watchlist</a></div>
+        {% endif %}
+        <form action="{% url 'get_comment' listing.title%}" method="post">
+            {% csrf_token %}
+            {{ form }}
+            <input type="submit" value="Submit" style="background-color: lightblue;">
+        </form>
+        {% if not closed  %}
+            <form action="{% url 'get_bid' listing.title%}" method="post">
+                {% csrf_token %}
+                {{ second_form }}
+                <input type="submit" value="Submit" style="background-color: lightblue;">
+            </form>
+        {% endif %}
+        {% if user == listing.listing_by %}
+            {% if not closed %}
+                <a href="{% url 'close_listing' listing.title%}">Close the auction</a>
+            {% else %}
+                <div>Auction is closed</div>
+            {% endif %}
+        {% endif %}
+        {% if closed %}
+            {% if user == closed.winner %}
+                <h2>Congratulations you won the auction!</h2>
+            {% else  %}
+            <div>Auction is Closed</div>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+
+
+{% endblock %}

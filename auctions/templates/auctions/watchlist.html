@@ -1,0 +1,22 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Watchlist</h2>
+    {% for listing in watchlist %}
+        <ul>
+            <li>
+                <h1> <a href="{% url 'listing_page' listing.item.title %}">{{ listing.item.title }}</a></h1> 
+                <div>{{ listing.item.description }}</div>
+                <img src="{{ listing.item.image }}" alt="{{ listing.item.description }}">
+                <div>Price:  {{ listing.item.starting_bid }}</div>
+                {% for commentit in comments %}
+                    {% if commentit.on_item == listing.item %}
+                        <div>{{ commentit.comment_by }} : {{ commentit.comment }} </div>
+                    {% endif %}
+                {% endfor %}
+            </li>
+        </ul>
+        <hr style="height:2px;border-width:0;color:gray;background-color:lightgray">
+    {% endfor %}
+ 
+{% endblock %}
